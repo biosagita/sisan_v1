@@ -291,6 +291,7 @@ function fnNext(id) {
 					timer_2.start(1000);
 				}
 
+				$('#tbl_addType tbody').empty();
 				$('#additionalType').trigger('click');
 				
 			}
