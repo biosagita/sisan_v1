@@ -100,17 +100,14 @@
 			<form id="frm_addType">
 				<div style="margin-bottom:5px;">
 					<select name="type_1" id="type_1" style="width: 98%;padding: 5px;">
-						<option>------Pilih Tipe 1-------</option>
 					</select>
 				</div>
 				<div style="margin-bottom:5px;">
 					<select name="type_2" id="type_2" style="width: 98%;padding: 5px;display:none;">
-						<option>------Pilih Tipe 2-------</option>
 					</select>
 				</div>
 				<div style="margin-bottom:5px;">
 					<select name="type_3" id="type_3" style="width: 98%;padding: 5px;display:none;">
-						<option>------Pilih Tipe 3-------</option>
 					</select>
 				</div>
 				<div style="margin-bottom:5px;">
@@ -172,7 +169,7 @@
 			$('#type_2').hide();
 			$('#type_3').hide();
 			$('#notes').hide();
-			
+
 			$('#mdl_type').show();
 		});
 
@@ -246,6 +243,8 @@
 		});
 
 		$('#type_2').change(function(){
+			$('#type_3').val('');
+			$('#notes').val('');
 			$('#btnAddType').attr('disabled', true);
 
 			var nilai = $(this).val();
@@ -310,7 +309,7 @@
 			var tmp = '<tr>';
 			tmp += '<td style="padding:5px;text-align:center;">'+(parseInt(nourut)+1)+'</td>';
 			tmp += '<td style="padding:5px;">'+txt+'</td>';
-			tmp += '<td style="padding:5px;text-align:center;"><a href="#" style="color:red;">DELETE</a></td>';
+			tmp += '<td style="padding:5px;text-align:center;"><a data-id="'+(parseInt(nourut)+1)+'" class="lnk_del" href="#" style="color:red;">DELETE</a></td>';
 			tmp += '</tr>';
 			$('#tbl_addType tbody').append(tmp);
 
@@ -321,6 +320,24 @@
 			$('#type_2').hide();
 			$('#type_3').hide();
 			$('#notes').hide();
+			$('#btnAddType').attr('disabled', true);
 		});
+
+		$( "body" ).delegate( "a.lnk_del", "click", function(e) {
+			e.preventDefault();
+			var me = $(this);
+			var id = me.data('id');
+			me.closest('tr').remove();
+			reorder();
+		});
+
+		function reorder(){
+			var cld = $('#tbl_addType tbody').children();
+			var cnt = 1;
+			$.each(cld, function(idx, val){
+				$(this).find('td:eq(0)').text(cnt);
+				cnt++;
+			})
+		}
 	});
 </script>
