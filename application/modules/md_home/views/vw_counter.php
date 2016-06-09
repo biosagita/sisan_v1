@@ -290,6 +290,8 @@ function fnNext(id) {
 				} else {
 					timer_2.start(1000);
 				}
+
+				$('#additionalType').trigger('click');
 				
 			}
 		});

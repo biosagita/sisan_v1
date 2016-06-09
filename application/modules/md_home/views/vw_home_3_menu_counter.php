@@ -44,6 +44,10 @@
 	}
 </style>
 
+<style type="text/css">
+	button:disabled {opacity: 0.65;cursor: not-allowed;}
+</style>
+
 	<div data-options="region:'west',split:true,border:true,title:'Modules'" style="width:210px;padding:5px; font-size:24px;">
 
 
@@ -93,30 +97,33 @@
 			<span>ADDITIONAL TYPE</span>
 		</div>
 		<div class="form_wrap" style="display:block;padding:10px;text-align:center;">
-			<form>
+			<form id="frm_addType">
 				<div style="margin-bottom:5px;">
-					<select style="width: 98%;padding: 5px;">
+					<select name="type_1" id="type_1" style="width: 98%;padding: 5px;">
 						<option>------Pilih Tipe 1-------</option>
 					</select>
 				</div>
 				<div style="margin-bottom:5px;">
-					<select style="width: 98%;padding: 5px;">
+					<select name="type_2" id="type_2" style="width: 98%;padding: 5px;display:none;">
 						<option>------Pilih Tipe 2-------</option>
 					</select>
 				</div>
 				<div style="margin-bottom:5px;">
-					<select style="width: 98%;padding: 5px;">
+					<select name="type_3" id="type_3" style="width: 98%;padding: 5px;display:none;">
 						<option>------Pilih Tipe 3-------</option>
 					</select>
 				</div>
 				<div style="margin-bottom:5px;">
-					<button style="width: 98%;padding: 5px;">Add</button>
+					<textarea name="notes" id="notes" style="width: 98%;padding: 5px;display:none;" placeholder="notes"></textarea>
+				</div>
+				<div style="margin-bottom:5px;">
+					<button id="btnAddType" style="width: 98%;padding: 5px;" disabled>Add</button>
 				</div>
 			</form>
 		</div>
 		<div style="display:block;padding:10px;text-align:center;">
-			<div style="height:190px;width:98%;margin:auto;overflow-y: scroll;overflow-x: hidden;">
-				<table border="1" style="width:100%;" cellspacing="0" cellpadding="15">
+			<div style="height:140px;width:98%;margin:auto;overflow-y: scroll;overflow-x: hidden;">
+				<table id="tbl_addType" border="1" style="width:100%;" cellspacing="0" cellpadding="15">
 					<thead>
 						<tr>
 							<th style="padding:5px;">NO</th>
@@ -124,13 +131,7 @@
 							<th>Action</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td style="padding:5px;text-align:center;">1</td>
-							<td style="padding:5px;">INQUIRY > Activation > Prepaid Product</td>
-							<td style="padding:5px;text-align:center;"><a href="#" style="color:red;">DELETE</a></td>
-						</tr>
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>
 		</div>	
@@ -163,12 +164,163 @@
 	$(function(){
 		$('#additionalType').click(function(e){
 			e.preventDefault();
+
+			$('#type_1').val('');
+			$('#type_2').val('');
+			$('#type_3').val('');
+			$('#notes').val('');
+			$('#type_2').hide();
+			$('#type_3').hide();
+			$('#notes').hide();
+			
 			$('#mdl_type').show();
 		});
 
 		$('#cls_mdl').click(function(e){
 			e.preventDefault();
 			$('#mdl_type').hide();
+		});
+
+		var datasource_1 = {};
+		var datasource_2 = {};
+		var datasource_3 = {};
+
+		var base_url = '<?php echo site_url("assets/json"); ?>';
+		base_url = base_url.replace('index.php/', '');
+
+		$.ajax({
+			url : base_url+'/datasource_1.json',
+			dataType : 'json',
+			async : false,
+			success : function(data){
+				datasource_1 = data;
+			}
+		});
+
+		$.ajax({
+			url : base_url+'/datasource_2.json',
+			dataType : 'json',
+			async : false,
+			success : function(data){
+				datasource_2 = data;
+			}
+		});
+
+		$.ajax({
+			url : base_url+'/datasource_3.json',
+			dataType : 'json',
+			async : false,
+			success : function(data){
+				datasource_3 = data;
+			}
+		});
+
+		var tmp = '<option value="">------Pilih Tipe 1-------</option>';
+		$.each(datasource_1, function(idx,val){
+			tmp += '<option value="'+idx+'">'+val+'</option>';
+		});
+
+		$('#type_1').empty().append(tmp);
+
+		$('#type_1').change(function(){
+			$('#type_3').val('');
+			$('#notes').val('');
+			$('#type_3').hide();
+			$('#notes').hide();
+			$('#btnAddType').attr('disabled', true);
+
+			var nilai = $(this).val();
+
+			if(nilai == '') {
+				$('#type_2').val('');
+				$('#type_2').hide();
+				return;
+			}
+
+			var tmp = '<option value="">------Pilih Tipe 2-------</option>';
+			$.each(datasource_2[nilai], function(idx,val){
+				tmp += '<option value="'+idx+'">'+val+'</option>';
+			});
+			$('#type_2').empty().append(tmp);
+			$('#type_2').show();
+		});
+
+		$('#type_2').change(function(){
+			$('#btnAddType').attr('disabled', true);
+
+			var nilai = $(this).val();
+
+			if(nilai == '') {
+				$('#type_3').val('');
+				$('#notes').val('');
+				$('#type_3').hide();
+				$('#notes').hide();
+				return;
+			}
+
+			var arr = datasource_3[nilai] || '';
+
+			if(arr == '') {
+				$('#type_3').val('');
+				$('#type_3').hide();
+				$('#notes').show();
+				$('#btnAddType').attr('disabled', false);
+				return;
+			}
+
+			var tmp = '<option value="">------Pilih Tipe 3-------</option>';
+			$.each(arr, function(idx,val){
+				tmp += '<option value="'+idx+'">'+val+'</option>';
+			});
+			$('#type_3').empty().append(tmp);
+			$('#type_3').show();
+			$('#notes').show();
+		});
+
+		$('#type_3').change(function(){
+			var nilai = $(this).val();
+
+			if(nilai == '') {
+				$('#btnAddType').attr('disabled', true);
+				return;
+			}
+
+			$('#btnAddType').attr('disabled', false);
+		});
+
+		$('#btnAddType').click(function(e){
+			e.preventDefault();
+
+			var txt = '';
+			var nilai_type_1 = $('#type_1').val() || '';
+			var nilai_type_2 = $('#type_2').val() || '';
+			var nilai_type_3 = $('#type_3').val() || '';
+			if(nilai_type_1 != '') {
+				txt += $('#type_1 option[value="'+nilai_type_1+'"]').text();
+			}
+			if(nilai_type_2 != '') {
+				txt += ' > ' + $('#type_2 option[value="'+nilai_type_2+'"]').text();
+			}
+			if(nilai_type_3 != '') {
+				txt += ' > ' + $('#type_3 option[value="'+nilai_type_3+'"]').text();
+			}
+
+			var nourut = $('#tbl_addType tbody').children().length || 0;
+
+			var tmp = '<tr>';
+			tmp += '<td style="padding:5px;text-align:center;">'+(parseInt(nourut)+1)+'</td>';
+			tmp += '<td style="padding:5px;">'+txt+'</td>';
+			tmp += '<td style="padding:5px;text-align:center;"><a href="#" style="color:red;">DELETE</a></td>';
+			tmp += '</tr>';
+			$('#tbl_addType tbody').append(tmp);
+
+			$('#type_1').val('');
+			$('#type_2').val('');
+			$('#type_3').val('');
+			$('#notes').val('');
+			$('#type_2').hide();
+			$('#type_3').hide();
+			$('#notes').hide();
 		});
 	});
 </script>
