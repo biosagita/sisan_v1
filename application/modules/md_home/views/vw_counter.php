@@ -291,6 +291,7 @@ function fnNext(id) {
 					timer_2.start(1000);
 				}
 
+				$('#id_transaksix').val(data.id_transaksi);
 				$('#tbl_addType tbody').empty();
 				$('#additionalType').trigger('click');
 				

@@ -98,6 +98,7 @@
 		</div>
 		<div class="form_wrap" style="display:block;padding:10px;text-align:center;">
 			<form id="frm_addType">
+				<input type="hidden" name="id_transaksix" id="id_transaksix">
 				<div style="margin-bottom:5px;">
 					<select name="type_1" id="type_1" style="width: 98%;padding: 5px;">
 					</select>
@@ -135,6 +136,7 @@
 	</div>
 </div>
 
+<div id="id_transaksix" style="display:none;"></div>
 	
 <script>
 
@@ -304,31 +306,45 @@
 				txt += ' > ' + $('#type_3 option[value="'+nilai_type_3+'"]').text();
 			}
 
-			var nourut = $('#tbl_addType tbody').children().length || 0;
+			var data_insert = {
+				adty_trans_id : $('#id_transaksix').val(),
+				adty_type_id : (nilai_type_3 != '' ? nilai_type_3 : nilai_type_2),
+				adty_type_info : txt,
+				adty_note : $('#notes').val(),
+			};
 
-			var tmp = '<tr>';
-			tmp += '<td style="padding:5px;text-align:center;">'+(parseInt(nourut)+1)+'</td>';
-			tmp += '<td style="padding:5px;">'+txt+'</td>';
-			tmp += '<td style="padding:5px;text-align:center;"><a data-id="'+(parseInt(nourut)+1)+'" class="lnk_del" href="#" style="color:red;">DELETE</a></td>';
-			tmp += '</tr>';
-			$('#tbl_addType tbody').append(tmp);
+			$.post('<?php echo site_url("md_home/md_home/do_insert_addtype"); ?>', data_insert, function(data){
+				var nourut = $('#tbl_addType tbody').children().length || 0;
 
-			$('#type_1').val('');
-			$('#type_2').val('');
-			$('#type_3').val('');
-			$('#notes').val('');
-			$('#type_2').hide();
-			$('#type_3').hide();
-			$('#notes').hide();
-			$('#btnAddType').attr('disabled', true);
+				var tmp = '<tr>';
+				tmp += '<td style="padding:5px;text-align:center;">'+(parseInt(nourut)+1)+'</td>';
+				tmp += '<td style="padding:5px;">'+txt+'</td>';
+				tmp += '<td style="padding:5px;text-align:center;"><a data-id="'+data.adty_id+'" class="lnk_del" href="#" style="color:red;">DELETE</a></td>';
+				tmp += '</tr>';
+				$('#tbl_addType tbody').append(tmp);
+
+				$('#type_1').val('');
+				$('#type_2').val('');
+				$('#type_3').val('');
+				$('#notes').val('');
+				$('#type_2').hide();
+				$('#type_3').hide();
+				$('#notes').hide();
+				$('#btnAddType').attr('disabled', true);
+			}, 'json');
 		});
 
 		$( "body" ).delegate( "a.lnk_del", "click", function(e) {
 			e.preventDefault();
 			var me = $(this);
 			var id = me.data('id');
-			me.closest('tr').remove();
-			reorder();
+			var data_delete = {
+				adty_id : id
+			}
+			$.post('<?php echo site_url("md_home/md_home/do_delete_addtype"); ?>', data_delete, function(data){
+				me.closest('tr').remove();
+				reorder();
+			}, 'json');
 		});
 
 		function reorder(){

@@ -166,4 +166,40 @@ class md_home extends CI_Controller {
 		$this->session->sess_destroy();
 		redirect(base_url(),'refresh');
 	}
+
+	function do_insert_addtype() {
+		$status = array(
+			'err_msg' => '',
+			'detail' => $_POST,
+		);
+
+		$data_insert = array(
+			'adty_trans_id' => $_POST['adty_trans_id'],
+			'adty_type_id' => $_POST['adty_type_id'],
+			'adty_type_info' => $_POST['adty_type_info'],
+			'adty_note' => $_POST['adty_note'],
+			'adty_entrydate' => date('Y-m-d H:i:s'),
+		);
+
+		$status['res'] = $this->db->insert('additional_type', $data_insert);
+		$status['adty_id'] = $this->db->insert_id();
+
+		echo json_encode($status);
+	}
+
+	function do_delete_addtype() {
+		$status = array(
+			'err_msg' => '',
+		);
+
+		if(empty($_POST['adty_id'])){
+			$status['err_msg'] = 'id is empty';
+			echo json_encode($status);
+			exit();
+		}
+
+		$status['res'] = $this->db->where('adty_id = "'.$_POST['adty_id'].'"')->delete('additional_type');
+
+		echo json_encode($status);
+	}
 }
