@@ -135,8 +135,6 @@
 		</div>	
 	</div>
 </div>
-
-<div id="id_transaksix" style="display:none;"></div>
 	
 <script>
 
