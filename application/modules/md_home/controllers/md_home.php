@@ -226,4 +226,34 @@ class md_home extends CI_Controller {
 
 		echo json_encode($status);
 	}
+
+	function do_calc_estimation() {
+		$status = array(
+			'err_msg' => '',
+			'estimation' => 0,
+		);
+
+		$Loket= $this->session->userdata('sIdLoket');
+		$currentDate=date('Ymd');
+
+		$q = 'SELECT pl.id_group_layanan, pl.id_group_loket FROM loket lo JOIN prioritas_layanan pl ON (lo.id_group_loket = pl.id_group_loket) WHERE lo.id_loket = ' . $Loket;
+		$query = $this->db->query($q);
+		$listlayanan = array();
+		$grouploket = '';
+		foreach ($query->result() as $vRow)
+		{
+		   $listlayanan[] = $vRow->id_group_layanan;
+		   $grouploket = $vRow->id_group_loket;
+		}
+
+		$q = 'SELECT SUM(lyn.estimasi) as total_estimasi FROM transaksi tr JOIN layanan lyn ON (tr.id_layanan=lyn.id_layanan) JOIN group_layanan gl ON (tr.id_group_layanan = gl.id_group_layanan) JOIN prioritas_layanan pl ON (tr.id_group_layanan = pl.id_group_layanan) WHERE pl.id_group_loket = ('.$grouploket.') AND tr.id_group_layanan IN ('.join(',', $listlayanan).') AND tr.status_transaksi = 0 AND tr.tanggal_transaksi = "'.$currentDate.'" GROUP BY tr.tanggal_transaksi';
+		$query = $this->db->query($q);
+
+		foreach ($query->result() as $vRow)
+		{
+			$status['estimation'] = $vRow->total_estimasi;
+		}
+
+		echo json_encode($status);
+	}
 }

@@ -7,7 +7,8 @@
 		<table width=100%>
 		<tr>
 			<td align=center  style="padding:10px auto;width=10%; height:10px ;background-color:#0B243B;font: normal 15pt Arial,Helvetica,sans-serif;font-weight: bold;color:#FFF;">TIKET
-			<td width=40%>
+			<td width=35%>
+			<td align=center  style="padding:10px auto;width=10%; height:10px ;background-color:#0B243B;font: normal 15pt Arial,Helvetica,sans-serif;font-weight: bold;color:#FFF;">ESTIMATION
 			<td align=center  style="padding:10px auto;width=10%; height:10px ;background-color:#0B243B;font: normal 15pt Arial,Helvetica,sans-serif;font-weight: bold;color:#FFF;">SERVICE TIME
 			<td align=center  style="padding:10px auto;width=10%; height:10px ;background-color:#0B243B;font: normal 15pt Arial,Helvetica,sans-serif;font-weight: bold;color:#FFF;">IDLE TIME
 			<td align=center  style="padding:10px auto;width=10%; height:10px ;background-color:#0B243B;font: normal 15pt Arial,Helvetica,sans-serif;font-weight: bold;color:#FFF;">LOKET
@@ -20,6 +21,10 @@
 					<tr><td>FORWARD LAYANAN <td width=3px>:<td id="forward_layanan">
 					<tr><td>LOGIN <td width=3px>:<td > <?php  echo$this->session->userdata('sEmpName'); ?> 
 				</table>	
+			<td align=center  style="padding:10px auto;width:10%; height:50px ;background-color:#efefef;font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;color:red;">
+				<div id="timer_estimation" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">
+		            <span class="hour" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">00</span>:<span class="minute" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">00</span>:<span class="second" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">00</span>
+		        </div>
 			<td align=center  style="padding:10px auto;width:10%; height:50px ;background-color:#efefef;font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;color:red;">
 				<div class="timer" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">
 		            <span class="hour" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">00</span>:<span class="minute" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">00</span>:<span class="second" style="font: normal 25pt Arial,Helvetica,sans-serif;font-weight: bold;">00</span>
@@ -109,16 +114,34 @@ var timer;
 
 var timer_2;
 
+function calc_estimation(){
+	$.ajax({
+		url : '<?php echo site_url("md_home/md_home/do_calc_estimation"); ?>',
+		dataType : 'json',
+		success : function(data){
+			var estimation = parseInt(data.estimation);
+			var minute = estimation%60;
+			var hour = Math.floor(estimation/60);
+			minute = minute < 10 ? ('0'+minute) : minute;
+			hour = hour < 10 ? ('0'+hour) : hour;
+			$('#timer_estimation .minute').text(minute);
+			$('#timer_estimation .hour').text(hour);
+		}
+	});
+}
 
-$(document).ready(function() { 	
+$(document).ready(function() {
    
    setInterval(function() {
 		$('#84A_dtgcounter').datagrid('reload');
 		$('#84B_dtgcounter').datagrid('reload');		
-		$('#84C_dtgcounter').datagrid('reload');		
+		$('#84C_dtgcounter').datagrid('reload');
+		calc_estimation();
    }, 10000);
 
    $.ajaxSetup({ cache: false });
+
+   calc_estimation();
 
 });
 
@@ -186,6 +209,8 @@ $('#ownbtnprocess').click(function(e){
 			$('#id_transaksix').val(data.id_transaksi);
 			$('#tbl_addType tbody').empty();
 			$('#additionalType').trigger('click');
+
+			calc_estimation();
 		}		
 	});
 
@@ -300,7 +325,8 @@ function fnNext(id) {
 				$('#id_transaksix').val(data.id_transaksi);
 				$('#tbl_addType tbody').empty();
 				$('#additionalType').trigger('click');
-				
+
+				calc_estimation();
 			}
 		});
 
@@ -338,6 +364,7 @@ function fnUndo(id) {
 						$('#84A_dtgcounter').datagrid('reload');
 						$('#84B_dtgcounter').datagrid('reload');
 						
+						calc_estimation();
 					} else {
 						$.messager.show({title:'Error',msg:result.msg});
 					}
