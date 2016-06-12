@@ -97,6 +97,7 @@
 			<span>ADDITIONAL TYPE</span>
 		</div>
 		<div class="form_wrap" style="display:block;padding:10px;text-align:center;">
+			<p style="color:#000;font-size:18px;">NO : <span style="color:#000;font-size:18px;" id="no_antrian"></span></p>
 			<form id="frm_addType">
 				<input type="hidden" name="id_transaksix" id="id_transaksix">
 				<div style="margin-bottom:5px;">
@@ -120,7 +121,7 @@
 			</form>
 		</div>
 		<div style="display:block;padding:10px;text-align:center;">
-			<div style="height:140px;width:98%;margin:auto;overflow-y: scroll;overflow-x: hidden;">
+			<div id="wrap_info_table" style="height:200px;width:98%;margin:auto;overflow-y: scroll;overflow-x: hidden;">
 				<table id="tbl_addType" border="1" style="width:100%;" cellspacing="0" cellpadding="15">
 					<thead>
 						<tr>
@@ -162,6 +163,13 @@
 		$('#additionalType').click(function(e){
 			e.preventDefault();
 
+			var no_tiket = $('#tiket').text() || '';
+			no_tiket = no_tiket.trim();
+			if(no_tiket == '') {
+				alert('Tidak ada transaksi yang dilayani');
+				return false;
+			}
+
 			$('#type_1').val('');
 			$('#type_2').val('');
 			$('#type_3').val('');
@@ -169,6 +177,29 @@
 			$('#type_2').hide();
 			$('#type_3').hide();
 			$('#notes').hide();
+
+			var adty_trans_id = $('#id_transaksix').val() || 0;
+
+			$('#tbl_addType tbody').empty();
+
+			$.ajax({
+				url : '<?php echo site_url("md_home/md_home/do_select_addtype"); ?>',
+				type: 'POST',
+				data: {adty_trans_id: adty_trans_id},
+				dataType : 'json',
+				success : function(data){
+					var nourut = 1;
+					$.each(data.detail, function(idx, val){
+						var tmp = '<tr>';
+						tmp += '<td style="padding:5px;text-align:center;">'+nourut+'</td>';
+						tmp += '<td style="padding:5px;">'+val.adty_type_info+'</td>';
+						tmp += '<td style="padding:5px;text-align:center;"><a data-id="'+val.adty_id+'" class="lnk_del" href="#" style="color:red;">DELETE</a></td>';
+						tmp += '</tr>';
+						$('#tbl_addType tbody').append(tmp);
+						nourut++;
+					});
+				}
+			});
 
 			$('#mdl_type').show();
 		});
@@ -220,6 +251,7 @@
 		$('#type_1').empty().append(tmp);
 
 		$('#type_1').change(function(){
+			$('#wrap_info_table').height(170);
 			$('#type_3').val('');
 			$('#notes').val('');
 			$('#type_3').hide();
@@ -243,6 +275,7 @@
 		});
 
 		$('#type_2').change(function(){
+			$('#wrap_info_table').height(100);
 			$('#type_3').val('');
 			$('#notes').val('');
 			$('#btnAddType').attr('disabled', true);
@@ -260,6 +293,7 @@
 			var arr = datasource_3[nilai] || '';
 
 			if(arr == '') {
+				$('#wrap_info_table').height(120);
 				$('#type_3').val('');
 				$('#type_3').hide();
 				$('#notes').show();
@@ -329,6 +363,8 @@
 				$('#type_3').hide();
 				$('#notes').hide();
 				$('#btnAddType').attr('disabled', true);
+
+				$('#wrap_info_table').height(200);
 			}, 'json');
 		});
 

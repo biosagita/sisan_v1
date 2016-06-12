@@ -41,7 +41,7 @@
 					   <th data-options="field:'queue_no',title:'<b>Queue No</b>',width:80,align:'center',sortable:true" halign="center"></th>          	
 					   <th data-options="field:'type',title:'<b>Type</b>',width:350,sortable:true" halign="center"></th>          	
 					   <th data-options="field:'time',title:'<b>Time In</b>',width:70,align:'center',sortable:true" halign="center"></th>          	
-					   <th data-options="field:'btn_next',title:'<b>Action</b>',width:70,align:'center',sortable:true" halign="center"></th>
+					   <th data-options="field:'btn_next',title:'<b>Action</b>',hidden:true,width:70,align:'center',sortable:true" halign="center"></th>
 					   
 			   </tr>
 			</thead>
@@ -181,6 +181,11 @@ $('#ownbtnprocess').click(function(e){
 			} else {
 				timer_2.start(1000);
 			}
+
+			$('#no_antrian').text(data.no_tiket);
+			$('#id_transaksix').val(data.id_transaksi);
+			$('#tbl_addType tbody').empty();
+			$('#additionalType').trigger('click');
 		}		
 	});
 
@@ -291,6 +296,7 @@ function fnNext(id) {
 					timer_2.start(1000);
 				}
 
+				$('#no_antrian').text(data.no_tiket);
 				$('#id_transaksix').val(data.id_transaksi);
 				$('#tbl_addType tbody').empty();
 				$('#additionalType').trigger('click');

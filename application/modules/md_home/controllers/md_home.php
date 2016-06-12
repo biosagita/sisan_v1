@@ -170,6 +170,8 @@ class md_home extends CI_Controller {
 	function do_insert_addtype() {
 		$status = array(
 			'err_msg' => '',
+			'adty_id' => '',
+			'res' => array(),
 			'detail' => $_POST,
 		);
 
@@ -190,6 +192,7 @@ class md_home extends CI_Controller {
 	function do_delete_addtype() {
 		$status = array(
 			'err_msg' => '',
+			'res' => array(),
 		);
 
 		if(empty($_POST['adty_id'])){
@@ -199,6 +202,27 @@ class md_home extends CI_Controller {
 		}
 
 		$status['res'] = $this->db->where('adty_id = "'.$_POST['adty_id'].'"')->delete('additional_type');
+
+		echo json_encode($status);
+	}
+
+	function do_select_addtype() {
+		$status = array(
+			'err_msg' => '',
+			'res' => array(),
+			'detail' => array(),
+		);
+
+		if(!isset($_POST['adty_trans_id'])){
+			$status['err_msg'] = 'transaction id is empty';
+			echo json_encode($status);
+			exit();
+		}
+
+		$status['res'] = $this->db->where('adty_trans_id = "'.$_POST['adty_trans_id'].'"')->get('additional_type')->result_array();
+		foreach ($status['res'] as $key => $val) {
+			$status['detail'][$key] = $val;
+		}
 
 		echo json_encode($status);
 	}
