@@ -7,8 +7,9 @@
         <title>Tiket</title>
         <style type="text/css">
         	body{font-family: sans-serif;}
-        	.msg{position:absolute;top:0;right:0;left:0;padding:10px;text-align:center;background:#ffa500;color:#fff;display:none;}
+        	.msg{position:absolute;top:0;right:0;left:0;padding:10px;text-align:center;background:#808080;color:#fff;display:none;}
         	.content-wrap{padding-top:40px;}
+        	#btnCustomer{background-color:#ffa500;border:none;color:#fff;padding:5px 50px;text-align:center;text-decoration:none;display:inline-block;font-size:16px;box-shadow:0 8px 16px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19)}
         </style>
     </head>
     <body>
