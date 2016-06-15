@@ -40,6 +40,7 @@
 
 // $route['default_controller'] = "welcome"; // <----- DEFAULT
 $route['default_controller'] = "md_home"; // <----- REKOMENDASI MASTRIPUNK ALA AXLE ASIA
+$route['tiket'] = "md_tiket/md_tiket"; // <----- REKOMENDASI MASTRIPUNK ALA AXLE ASIA
 $route['404_override'] = '';
 
 
