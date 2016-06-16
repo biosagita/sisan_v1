@@ -22,7 +22,7 @@
             .footer-content{color: #fff;text-align: center;}
             .timing{border-bottom: solid 1px;font-size: 40px;padding-bottom: 5px;margin-bottom: 10px;font-weight: bold;}
 
-            @media only screen and (max-width: 500px) {
+            @media only screen and (max-width: 650px) {
                 .header-content{min-height: 50px;}
                 .header-content img{width: 50px;}
                 .header-content h1{font-size: 14px;line-height: 46px;}
@@ -58,7 +58,7 @@
                     </a>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <h3>Nomor antrian: 0</h3>
+                <h3>Nomor antrian: <span id="no_antrian"><?php echo (!empty($last_tiket['total']) ? $last_tiket['total'] : 0); ?></span></h3>
             </div>
     	</div>
     	<script type="text/javascript" src="<?php echo base_url();?>assets/easyui/jquery.min.js"></script>
@@ -103,6 +103,7 @@
 						data: {id_layanan: id_layanan},
 						success : function(data){
 							$('.msg').show();
+                            $('#no_antrian').text(data.last_tiket.total);
 							setTimeout(function(){ $('.msg').hide(); }, 2000);
                             insert_status_click = true;
 						}

@@ -11,6 +11,14 @@ class mo_tiket extends CI_Model {
 		return $res;
 	}
 
+	function get_last_tiket() {
+		$now = date('Y-m-d');
+		$this->db->select("COUNT(*) as total", false);
+		$res = $this->db->where('DATE_FORMAT(tick_tanggal, "%Y-%m-%d") = "'.$now.'"')->get('ticket_print')->row_array();
+		
+		return $res;
+	}
+
 	function insert_tiket($id_layanan) {
 		$now = date('Y-m-d H:i:s');
 		list($tanggal, $waktu) = explode(' ', $now);
