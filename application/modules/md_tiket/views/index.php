@@ -8,7 +8,7 @@
         <style type="text/css">
             html,body,.content-wrap{height: 100%;}
         	body{font-family: sans-serif;background:#f78f1e;margin: 0;}
-        	.msg{position:absolute;top:0;right:0;left:0;padding:10px;text-align:center;background:#808080;color:#fff;display:none;}
+        	.msg{position:absolute;top:0;right:0;left:0;padding:10px;text-align:center;background:#808080;color:#fff;display:none;z-index: 2;}
         	.content-wrap{display: flex;align-items: center;justify-content: center;}
         	.btnCustomer{background-color:#ffa500;border:none;color:#fff;padding:5px 50px;text-align:center;text-decoration:none;display:inline-block;font-size:16px;box-shadow:0 8px 16px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);cursor:pointer;}
             .content{text-align: center;}
