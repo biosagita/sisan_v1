@@ -34,7 +34,7 @@
             }
         </style>
     </head>
-    <body>
+    <body onload="startTime()">
     	<div class="msg">Insert tiket berhasil!</div>
         <div class="header">
             <div class="header-content">
@@ -44,8 +44,8 @@
         </div>
         <div class="footer">
             <div class="footer-content">
-                <div class="timing"><span>21</span>:<span>07</span>:<span>20</span></div>
-                <div class="dating">Kamis, 16 Juni 2016</div>
+                <div id="timing" class="timing">00:00:00</div>
+                <div id="dating" class="dating"></div>
             </div>
         </div>
     	<div class="content-wrap">
@@ -53,7 +53,7 @@
                 <h2>SILAHKAN TEKAN TOMBOL UNTUK NOMOR ANTRIAN</h1>
                 <?php if(!empty($layanan)): ?>
                     <?php foreach($layanan as $value): ?>
-                    <a class="lnkCustomer" href="#">
+                    <a class="lnkCustomer" href="#" data-id="<?php echo $value['id_layanan']; ?>">
                         <img src="<?php echo base_url();?>images/button_bolt.png">
                     </a>
                     <?php endforeach; ?>
@@ -62,13 +62,39 @@
             </div>
     	</div>
     	<script type="text/javascript" src="<?php echo base_url();?>assets/easyui/jquery.min.js"></script>
+        <script type="text/javascript">
+            function startTime() {
+                var today = new Date();
+                var h = today.getHours();
+                var m = today.getMinutes();
+                var s = today.getSeconds();
+                m = checkTime(m);
+                s = checkTime(s);
+                document.getElementById('timing').innerHTML =
+                h + ":" + m + ":" + s;
+                var t = setTimeout(startTime, 500);
+            }
+            function checkTime(i) {
+                if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+                return i;
+            }
+        </script>
+        <script type="text/javascript">
+            var d = new Date();
+            var days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+            var months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+            var dt = d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+            document.getElementById("dating").innerHTML = days[d.getDay()] + ', ' + dt;
+        </script>
     	<script type="text/javascript">
     		$(function(){
+                var insert_status_click = true;
     			$('.lnkCustomer').click(function(e){
     				e.preventDefault();
+                    if(!insert_status_click) return false;
+                    insert_status_click = false;
     				var me = $(this);
     				var id_layanan = me.data('id');
-    				me.attr('disabled', true);
     				$('.msg').hide();
     				$.ajax({
 						url : '<?php echo site_url("md_tiket/md_tiket/do_tiket"); ?>',
@@ -76,9 +102,9 @@
 						dataType : 'json',
 						data: {id_layanan: id_layanan},
 						success : function(data){
-							me.attr('disabled', false);
 							$('.msg').show();
 							setTimeout(function(){ $('.msg').hide(); }, 2000);
+                            insert_status_click = true;
 						}
 					});
     			});
