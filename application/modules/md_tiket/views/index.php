@@ -11,7 +11,7 @@
         	.msg{position:absolute;top:0;right:0;left:0;padding:10px;text-align:center;background:#808080;color:#fff;display:none;z-index: 2;}
         	.content-wrap{display: flex;align-items: center;justify-content: center;}
         	.btnCustomer{background-color:#ffa500;border:none;color:#fff;padding:5px 50px;text-align:center;text-decoration:none;display:inline-block;font-size:16px;box-shadow:0 8px 16px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);cursor:pointer;}
-            .content{text-align: center;}
+            .content{text-align: center;width: 100%;}
             .content h2{color:#fff;font-stretch: ultra-condensed;font-size: 50px;}
             .content h3{color: #fff;font-size: 30px;font-weight: normal;}
             .header{position: absolute;top: 0;left: 0;right: 0;background: #fff;}
@@ -21,6 +21,17 @@
             .footer{position: absolute;bottom: 20px;right: 20px;}
             .footer-content{color: #fff;text-align: center;}
             .timing{border-bottom: solid 1px;font-size: 40px;padding-bottom: 5px;margin-bottom: 10px;font-weight: bold;}
+
+            @media only screen and (max-width: 500px) {
+                .header-content{min-height: 50px;}
+                .header-content img{width: 50px;}
+                .header-content h1{font-size: 14px;line-height: 46px;}
+                .content{width: 80%;}
+                .content h2{font-size: 20px;}
+                .content img{width: 235px;}
+                .content h3{font-size: 16px;}
+                .footer{left: 50%;right: initial;margin-left: -80px;}
+            }
         </style>
     </head>
     <body>
