@@ -21,6 +21,8 @@
             .footer{position: absolute;bottom: 20px;right: 20px;}
             .footer-content{color: #fff;text-align: center;}
             .timing{border-bottom: solid 1px;font-size: 40px;padding-bottom: 5px;margin-bottom: 10px;font-weight: bold;}
+            #btnFullScreen{position: absolute;right: 10px;top: 10px;}
+            #btnFullScreen img{width: 35px;}
 
             @media only screen and (max-width: 650px) {
                 .header-content{min-height: 50px;}
@@ -31,6 +33,7 @@
                 .content img{width: 235px;}
                 .content h3{font-size: 16px;}
                 .footer{left: 50%;right: initial;margin-left: -80px;}
+                #btnFullScreen img{width: 25px;}
             }
         </style>
     </head>
@@ -61,7 +64,13 @@
                 <h3>Nomor antrian: <span id="no_antrian"><?php echo (!empty($last_tiket['total']) ? $last_tiket['total'] : 0); ?></span></h3>
             </div>
     	</div>
+
+        <a id="btnFullScreen" href="#" title="Fullscreen Mode">
+            <img src="<?php echo base_url();?>images/fullscreen3.png">
+        </a>
+
     	<script type="text/javascript" src="<?php echo base_url();?>assets/easyui/jquery.min.js"></script>
+
         <script type="text/javascript">
             function startTime() {
                 var today = new Date();
@@ -79,6 +88,7 @@
                 return i;
             }
         </script>
+
         <script type="text/javascript">
             var d = new Date();
             var days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
@@ -86,9 +96,24 @@
             var dt = d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
             document.getElementById("dating").innerHTML = days[d.getDay()] + ', ' + dt;
         </script>
+
     	<script type="text/javascript">
+            // Find the right method, call on correct element
+            function launchIntoFullscreen(element) {
+              if(element.requestFullscreen) {
+                element.requestFullscreen();
+              } else if(element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+              } else if(element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+              } else if(element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+              }
+            }
+
     		$(function(){
                 var insert_status_click = true;
+
     			$('.lnkCustomer').click(function(e){
     				e.preventDefault();
                     if(!insert_status_click) return false;
@@ -109,6 +134,11 @@
 						}
 					});
     			});
+
+                $('#btnFullScreen').click(function(e){
+                    e.preventDefault();
+                    launchIntoFullscreen(document.documentElement);
+                })
     		});
     	</script>
     </body>
